@@ -22,6 +22,12 @@ variable "onprem_cidr" {
   type        = string
 }
 
+variable "container_port" {
+  description = "Container port for ECS service"
+  type        = number
+  default     = 3000
+}
+
 variable "allow_vpc_cidr" {
   description = "Whether to allow all traffic from VPC CIDR"
   type        = bool
