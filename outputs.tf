@@ -127,3 +127,57 @@ output "onprem_vpn_config_summary" {
     psk_command              = "terraform output -json | jq '.vpn_tunnel1_preshared_key.value, .vpn_tunnel2_preshared_key.value'"
   }
 }
+
+#------------------------------------------------------------------------------
+# EKS Outputs
+#------------------------------------------------------------------------------
+
+output "eks_cluster_name" {
+  description = "EKS cluster name"
+  value       = module.eks.cluster_name
+}
+
+output "eks_cluster_endpoint" {
+  description = "EKS cluster API endpoint"
+  value       = module.eks.cluster_endpoint
+}
+
+output "eks_cluster_certificate_authority" {
+  description = "EKS cluster CA certificate"
+  value       = module.eks.cluster_certificate_authority_data
+  sensitive   = true
+}
+
+output "eks_cluster_security_group_id" {
+  description = "EKS cluster security group ID"
+  value       = module.eks.cluster_security_group_id
+}
+
+#------------------------------------------------------------------------------
+# ECR Outputs
+#------------------------------------------------------------------------------
+
+output "ecr_repository_urls" {
+  description = "ECR repository URLs"
+  value       = module.ecr.repository_urls
+}
+
+#------------------------------------------------------------------------------
+# RDS Outputs
+#------------------------------------------------------------------------------
+
+output "rds_cluster_endpoint" {
+  description = "Aurora cluster writer endpoint"
+  value       = module.rds.cluster_endpoint
+}
+
+output "rds_cluster_reader_endpoint" {
+  description = "Aurora cluster reader endpoint"
+  value       = module.rds.cluster_reader_endpoint
+}
+
+output "rds_cluster_port" {
+  description = "Aurora cluster port"
+  value       = module.rds.cluster_port
+}
+

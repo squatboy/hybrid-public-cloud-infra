@@ -105,6 +105,66 @@ variable "additional_tags" {
 }
 
 #------------------------------------------------------------------------------
+# EKS Settings
+#------------------------------------------------------------------------------
+
+variable "eks_cluster_name" {
+  description = "Name of the EKS cluster"
+  type        = string
+  default     = "hybrid-pii-cluster"
+}
+
+variable "eks_cluster_version" {
+  description = "Kubernetes version for EKS cluster"
+  type        = string
+  default     = "1.30"
+}
+
+variable "fargate_namespaces" {
+  description = "List of namespaces for Fargate profile"
+  type        = list(string)
+  default     = ["staging", "production", "monitoring"]
+}
+
+#------------------------------------------------------------------------------
+# ECR Settings
+#------------------------------------------------------------------------------
+
+variable "ecr_repository_names" {
+  description = "List of ECR repository names"
+  type        = list(string)
+  default     = ["pii-system/pii-api"]
+}
+
+#------------------------------------------------------------------------------
+# RDS Settings (Aurora Serverless v2)
+#------------------------------------------------------------------------------
+
+variable "db_master_password" {
+  description = "Master password for Aurora database"
+  type        = string
+  sensitive   = true
+}
+
+variable "db_name" {
+  description = "Name of the default database"
+  type        = string
+  default     = "app_db"
+}
+
+variable "db_min_capacity" {
+  description = "Minimum ACU for Aurora Serverless v2"
+  type        = number
+  default     = 0.5
+}
+
+variable "db_max_capacity" {
+  description = "Maximum ACU for Aurora Serverless v2"
+  type        = number
+  default     = 1.0
+}
+
+#------------------------------------------------------------------------------
 # Locals - Computed Values
 #------------------------------------------------------------------------------
 
@@ -118,3 +178,4 @@ locals {
     var.additional_tags
   )
 }
+
