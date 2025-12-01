@@ -67,3 +67,23 @@ resource "aws_eks_fargate_profile" "main" {
 # Note: After cluster creation, run this command to patch CoreDNS:
 # kubectl patch deployment coredns -n kube-system --type json \
 #   -p='[{"op": "remove", "path": "/spec/template/metadata/annotations/eks.amazonaws.com~1compute-type"}]'
+
+#------------------------------------------------------------------------------
+# OIDC Provider for IRSA (IAM Roles for Service Accounts)
+# Required for AWS Load Balancer Controller and other AWS integrations
+#------------------------------------------------------------------------------
+
+# OIDC TLS 인증서 정보 조회
+data "tls_certificate" "this" {
+  url = aws_eks_cluster.this.identity[0].oidc[0].issuer
+}
+
+# IAM OIDC Provider 생성
+# 이 리소스가 있어야 EKS Pod가 IRSA를 통해 AWS IAM 권한을 사용할 수 있음
+resource "aws_iam_openid_connect_provider" "this" {
+  client_id_list  = ["sts.amazonaws.com"]
+  thumbprint_list = [data.tls_certificate.this.certificates[0].sha1_fingerprint]
+  url             = aws_eks_cluster.this.identity[0].oidc[0].issuer
+
+  tags = merge(var.tags, { Name = "${var.cluster_name}-oidc-provider" })
+}

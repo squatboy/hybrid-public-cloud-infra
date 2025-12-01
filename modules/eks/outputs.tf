@@ -46,3 +46,17 @@ output "fargate_profile_arn" {
   description = "ARN of the Fargate profile"
   value       = aws_eks_fargate_profile.main.arn
 }
+
+#------------------------------------------------------------------------------
+# OIDC Provider Outputs
+#------------------------------------------------------------------------------
+
+output "oidc_provider_arn" {
+  description = "The ARN of the OIDC Provider"
+  value       = aws_iam_openid_connect_provider.this.arn
+}
+
+output "oidc_provider_url" {
+  description = "The URL of the OIDC Provider (without https://)"
+  value       = replace(aws_iam_openid_connect_provider.this.url, "https://", "")
+}

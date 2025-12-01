@@ -153,6 +153,16 @@ output "eks_cluster_security_group_id" {
   value       = module.eks.cluster_security_group_id
 }
 
+output "eks_oidc_provider_arn" {
+  description = "EKS OIDC Provider ARN (for IRSA)"
+  value       = module.eks.oidc_provider_arn
+}
+
+output "eks_oidc_provider_url" {
+  description = "EKS OIDC Provider URL (without https://)"
+  value       = module.eks.oidc_provider_url
+}
+
 #------------------------------------------------------------------------------
 # ECR Outputs
 #------------------------------------------------------------------------------
