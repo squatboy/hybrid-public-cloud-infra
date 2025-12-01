@@ -2,22 +2,22 @@
 # IAM Module - Outputs
 #------------------------------------------------------------------------------
 
-output "cluster_role_arn" {
-  description = "ARN of the EKS cluster IAM role"
-  value       = aws_iam_role.cluster.arn
+output "execution_role_arn" {
+  description = "ARN of the ECS task execution IAM role"
+  value       = aws_iam_role.ecs_task_execution.arn
 }
 
-output "cluster_role_name" {
-  description = "Name of the EKS cluster IAM role"
-  value       = aws_iam_role.cluster.name
+output "execution_role_name" {
+  description = "Name of the ECS task execution IAM role"
+  value       = aws_iam_role.ecs_task_execution.name
 }
 
-output "fargate_role_arn" {
-  description = "ARN of the Fargate pod execution IAM role"
-  value       = aws_iam_role.fargate.arn
+output "task_role_arn" {
+  description = "ARN of the ECS task IAM role"
+  value       = aws_iam_role.ecs_task.arn
 }
 
-output "fargate_role_name" {
-  description = "Name of the Fargate pod execution IAM role"
-  value       = aws_iam_role.fargate.name
+output "task_role_name" {
+  description = "Name of the ECS task IAM role"
+  value       = aws_iam_role.ecs_task.name
 }

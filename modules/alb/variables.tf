@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# Security Module - Variables
+# ALB Module - Variables
 #------------------------------------------------------------------------------
 
 variable "env_name" {
@@ -8,30 +8,36 @@ variable "env_name" {
 }
 
 variable "vpc_id" {
-  description = "VPC ID where security groups will be created"
+  description = "VPC ID"
   type        = string
 }
 
-variable "vpc_cidr" {
-  description = "VPC CIDR block for internal communication rules"
-  type        = string
+variable "public_subnets" {
+  description = "List of public subnet IDs for ALB"
+  type        = list(string)
 }
 
-variable "onprem_cidr" {
-  description = "On-premise network CIDR block"
+variable "alb_sg_id" {
+  description = "Security group ID for ALB"
   type        = string
 }
 
 variable "container_port" {
-  description = "Container port for ECS service"
+  description = "Container port for target group"
   type        = number
   default     = 3000
 }
 
-variable "allow_vpc_cidr" {
-  description = "Whether to allow all traffic from VPC CIDR"
+variable "health_check_path" {
+  description = "Health check path for target group"
+  type        = string
+  default     = "/health"
+}
+
+variable "enable_deletion_protection" {
+  description = "Enable deletion protection for ALB"
   type        = bool
-  default     = true
+  default     = false
 }
 
 variable "tags" {

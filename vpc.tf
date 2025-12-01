@@ -25,7 +25,6 @@ resource "aws_internet_gateway" "igw" {
 #--------------------------------------------------------------
 # Public Subnets (Multi-AZ)
 # - ALB, NAT Gateway 배치용
-# - EKS용 태그 포함 (kubernetes.io/role/elb)
 #--------------------------------------------------------------
 resource "aws_subnet" "public" {
   count = length(var.availability_zones)
@@ -36,17 +35,14 @@ resource "aws_subnet" "public" {
   map_public_ip_on_launch = true
 
   tags = {
-    Name                                            = "${var.project_name}-public-subnet-${substr(var.availability_zones[count.index], -1, 1)}"
-    "kubernetes.io/role/elb"                        = "1"
-    "kubernetes.io/cluster/${var.project_name}-eks" = "shared"
-    Tier                                            = "public"
+    Name = "${var.project_name}-public-subnet-${substr(var.availability_zones[count.index], -1, 1)}"
+    Tier = "public"
   }
 }
 
 #--------------------------------------------------------------
 # Private Subnets (Multi-AZ)
-# - EKS 워커 노드, Lambda, 내부 서비스용
-# - EKS용 태그 포함 (kubernetes.io/role/internal-elb)
+# - ECS Fargate, RDS, 내부 서비스용
 #--------------------------------------------------------------
 resource "aws_subnet" "private" {
   count = length(var.availability_zones)
@@ -56,10 +52,8 @@ resource "aws_subnet" "private" {
   availability_zone = var.availability_zones[count.index]
 
   tags = {
-    Name                                            = "${var.project_name}-private-subnet-${substr(var.availability_zones[count.index], -1, 1)}"
-    "kubernetes.io/role/internal-elb"               = "1"
-    "kubernetes.io/cluster/${var.project_name}-eks" = "shared"
-    Tier                                            = "private"
+    Name = "${var.project_name}-private-subnet-${substr(var.availability_zones[count.index], -1, 1)}"
+    Tier = "private"
   }
 }
 

@@ -2,15 +2,9 @@
 # IAM Module - Variables
 #------------------------------------------------------------------------------
 
-variable "cluster_name" {
-  description = "Name of the EKS cluster"
+variable "project_name" {
+  description = "Project name for resource naming"
   type        = string
-}
-
-variable "aws_region" {
-  description = "AWS region for ARN construction"
-  type        = string
-  default     = "ap-northeast-2"
 }
 
 variable "tags" {

@@ -10,19 +10,16 @@
 variable "aws_region" {
   description = "AWS Region for resources"
   type        = string
-  default     = "ap-northeast-2"
 }
 
 variable "environment" {
   description = "Environment name (e.g., prod, staging, dev)"
   type        = string
-  default     = "prod"
 }
 
 variable "project_name" {
   description = "Project name for resource naming and tagging"
   type        = string
-  default     = "pii-hybrid"
 }
 
 #------------------------------------------------------------------------------
@@ -32,7 +29,6 @@ variable "project_name" {
 variable "vpc_cidr" {
   description = "VPC CIDR block"
   type        = string
-  default     = "10.20.0.0/16"
 
   validation {
     condition     = can(cidrhost(var.vpc_cidr, 0))
@@ -43,19 +39,16 @@ variable "vpc_cidr" {
 variable "public_subnets" {
   description = "List of public subnet CIDR blocks (Multi-AZ)"
   type        = list(string)
-  default     = ["10.20.1.0/24", "10.20.2.0/24"]
 }
 
 variable "private_subnets" {
   description = "List of private subnet CIDR blocks (Multi-AZ)"
   type        = list(string)
-  default     = ["10.20.10.0/24", "10.20.11.0/24"]
 }
 
 variable "availability_zones" {
   description = "List of availability zones to use"
   type        = list(string)
-  default     = ["ap-northeast-2a", "ap-northeast-2c"]
 }
 
 #------------------------------------------------------------------------------
@@ -75,7 +68,6 @@ variable "onprem_public_ip" {
 variable "onprem_cidr" {
   description = "On-premise internal network CIDR block"
   type        = string
-  default     = "10.10.10.0/24"
 
   validation {
     condition     = can(cidrhost(var.onprem_cidr, 0))
@@ -86,7 +78,6 @@ variable "onprem_cidr" {
 variable "bgp_asn" {
   description = "BGP Autonomous System Number for Customer Gateway"
   type        = number
-  default     = 65000
 
   validation {
     condition     = var.bgp_asn >= 64512 && var.bgp_asn <= 65534
@@ -105,25 +96,32 @@ variable "additional_tags" {
 }
 
 #------------------------------------------------------------------------------
-# EKS Settings
+# ECS Settings
 #------------------------------------------------------------------------------
 
-variable "eks_cluster_name" {
-  description = "Name of the EKS cluster"
-  type        = string
-  default     = "hybrid-pii-cluster"
+variable "ecs_container_port" {
+  description = "Container port for ECS service"
+  type        = number
 }
 
-variable "eks_cluster_version" {
-  description = "Kubernetes version for EKS cluster"
-  type        = string
-  default     = "1.30"
+variable "ecs_container_cpu" {
+  description = "CPU units for ECS task (256 = 0.25 vCPU)"
+  type        = number
 }
 
-variable "fargate_namespaces" {
-  description = "List of namespaces for Fargate profile"
-  type        = list(string)
-  default     = ["staging", "production", "monitoring"]
+variable "ecs_container_memory" {
+  description = "Memory for ECS task in MB"
+  type        = number
+}
+
+variable "ecs_desired_count" {
+  description = "Desired number of ECS tasks"
+  type        = number
+}
+
+variable "onprem_vault_ip" {
+  description = "On-premise Vault server IP address"
+  type        = string
 }
 
 #------------------------------------------------------------------------------
@@ -133,7 +131,6 @@ variable "fargate_namespaces" {
 variable "ecr_repository_names" {
   description = "List of ECR repository names"
   type        = list(string)
-  default     = ["pii-system/pii-api"]
 }
 
 #------------------------------------------------------------------------------
@@ -149,19 +146,16 @@ variable "db_master_password" {
 variable "db_name" {
   description = "Name of the default database"
   type        = string
-  default     = "app_db"
 }
 
 variable "db_min_capacity" {
   description = "Minimum ACU for Aurora Serverless v2"
   type        = number
-  default     = 0.5
 }
 
 variable "db_max_capacity" {
   description = "Maximum ACU for Aurora Serverless v2"
   type        = number
-  default     = 1.0
 }
 
 #------------------------------------------------------------------------------

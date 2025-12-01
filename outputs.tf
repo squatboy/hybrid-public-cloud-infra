@@ -129,38 +129,31 @@ output "onprem_vpn_config_summary" {
 }
 
 #------------------------------------------------------------------------------
-# EKS Outputs
+# ECS Outputs
 #------------------------------------------------------------------------------
 
-output "eks_cluster_name" {
-  description = "EKS cluster name"
-  value       = module.eks.cluster_name
+output "ecs_cluster_name" {
+  description = "ECS cluster name"
+  value       = module.ecs.cluster_name
 }
 
-output "eks_cluster_endpoint" {
-  description = "EKS cluster API endpoint"
-  value       = module.eks.cluster_endpoint
+output "ecs_service_name" {
+  description = "ECS service name"
+  value       = module.ecs.service_name
 }
 
-output "eks_cluster_certificate_authority" {
-  description = "EKS cluster CA certificate"
-  value       = module.eks.cluster_certificate_authority_data
-  sensitive   = true
+#------------------------------------------------------------------------------
+# ALB Outputs
+#------------------------------------------------------------------------------
+
+output "alb_dns_name" {
+  description = "ALB DNS name for accessing the application"
+  value       = module.alb.dns_name
 }
 
-output "eks_cluster_security_group_id" {
-  description = "EKS cluster security group ID"
-  value       = module.eks.cluster_security_group_id
-}
-
-output "eks_oidc_provider_arn" {
-  description = "EKS OIDC Provider ARN (for IRSA)"
-  value       = module.eks.oidc_provider_arn
-}
-
-output "eks_oidc_provider_url" {
-  description = "EKS OIDC Provider URL (without https://)"
-  value       = module.eks.oidc_provider_url
+output "alb_zone_id" {
+  description = "ALB hosted zone ID"
+  value       = module.alb.zone_id
 }
 
 #------------------------------------------------------------------------------
