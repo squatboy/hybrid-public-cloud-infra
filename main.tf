@@ -56,27 +56,8 @@ module "security" {
 module "iam" {
   source = "./modules/iam"
 
-  cluster_name = var.eks_cluster_name
-  aws_region   = var.aws_region
+  project_name = var.project_name
   tags         = local.common_tags
-}
-
-#------------------------------------------------------------------------------
-# EKS Module
-#------------------------------------------------------------------------------
-module "eks" {
-  source = "./modules/eks"
-
-  cluster_name       = var.eks_cluster_name
-  cluster_version    = var.eks_cluster_version
-  cluster_role_arn   = module.iam.cluster_role_arn
-  fargate_role_arn   = module.iam.fargate_role_arn
-  private_subnet_ids = module.vpc.private_subnet_ids
-  security_group_ids = [module.security.private_default_sg_id]
-  fargate_namespaces = var.fargate_namespaces
-  tags               = local.common_tags
-
-  depends_on = [module.iam, module.vpc]
 }
 
 #------------------------------------------------------------------------------
