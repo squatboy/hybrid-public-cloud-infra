@@ -44,6 +44,7 @@ module "security" {
   vpc_id         = module.vpc.vpc_id
   vpc_cidr       = var.vpc_cidr
   onprem_cidr    = var.onprem_cidr
+  container_port = var.ecs_container_port
   allow_vpc_cidr = true
   tags           = local.common_tags
 
@@ -88,5 +89,45 @@ module "rds" {
   tags                = local.common_tags
 
   depends_on = [module.vpc, module.security]
+}
+
+#------------------------------------------------------------------------------
+# ALB Module
+#------------------------------------------------------------------------------
+module "alb" {
+  source = "./modules/alb"
+
+  env_name       = var.environment
+  vpc_id         = module.vpc.vpc_id
+  public_subnets = module.vpc.public_subnet_ids
+  alb_sg_id      = module.security.alb_sg_id
+  container_port = var.ecs_container_port
+  tags           = local.common_tags
+
+  depends_on = [module.vpc, module.security]
+}
+
+#------------------------------------------------------------------------------
+# ECS Module
+#------------------------------------------------------------------------------
+module "ecs" {
+  source = "./modules/ecs"
+
+  env_name           = var.environment
+  aws_region         = var.aws_region
+  private_subnets    = module.vpc.private_subnet_ids
+  ecs_sg_id          = module.security.ecs_sg_id
+  target_group_arn   = module.alb.target_group_arn
+  execution_role_arn = module.iam.execution_role_arn
+  task_role_arn      = module.iam.task_role_arn
+  container_image    = "${module.ecr.repository_urls["pii-system/pii-api"]}:latest"
+  container_port     = var.ecs_container_port
+  container_cpu      = var.ecs_container_cpu
+  container_memory   = var.ecs_container_memory
+  desired_count      = var.ecs_desired_count
+  onprem_vault_ip    = var.onprem_vault_ip
+  tags               = local.common_tags
+
+  depends_on = [module.vpc, module.security, module.alb, module.iam, module.ecr]
 }
 

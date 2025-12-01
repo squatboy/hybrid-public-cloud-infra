@@ -103,10 +103,8 @@ resource "aws_ecs_service" "this" {
     container_port   = var.container_port
   }
 
-  deployment_configuration {
-    maximum_percent         = 200
-    minimum_healthy_percent = 100
-  }
+  deployment_maximum_percent         = 200
+  deployment_minimum_healthy_percent = 100
 
   # Task Definition 변경 시 새 배포 트리거
   force_new_deployment = true
