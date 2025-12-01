@@ -1,14 +1,15 @@
 #------------------------------------------------------------------------------
 # IAM Module - Main Configuration
-# EKS Cluster and Fargate Pod Execution Roles
+# ECS Task Execution and Task Roles
 #------------------------------------------------------------------------------
 
 #------------------------------------------------------------------------------
-# EKS Cluster Role
+# ECS Task Execution Role
+# Fargate가 ECR에서 이미지를 당겨오고 CloudWatch에 로그를 쓸 권한
 #------------------------------------------------------------------------------
 
-resource "aws_iam_role" "cluster" {
-  name = "${var.cluster_name}-cluster-role"
+resource "aws_iam_role" "ecs_task_execution" {
+  name = "${var.project_name}-ecs-task-execution-role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -16,31 +17,26 @@ resource "aws_iam_role" "cluster" {
       Action = "sts:AssumeRole"
       Effect = "Allow"
       Principal = {
-        Service = "eks.amazonaws.com"
+        Service = "ecs-tasks.amazonaws.com"
       }
     }]
   })
 
-  tags = merge(var.tags, { Name = "${var.cluster_name}-cluster-role" })
+  tags = merge(var.tags, { Name = "${var.project_name}-ecs-task-execution-role" })
 }
 
-resource "aws_iam_role_policy_attachment" "cluster_policy" {
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
-  role       = aws_iam_role.cluster.name
-}
-
-# Optional: VPC Resource Controller policy for security groups for pods
-resource "aws_iam_role_policy_attachment" "cluster_vpc_controller" {
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSVPCResourceController"
-  role       = aws_iam_role.cluster.name
+resource "aws_iam_role_policy_attachment" "ecs_task_execution_policy" {
+  role       = aws_iam_role.ecs_task_execution.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
 
 #------------------------------------------------------------------------------
-# Fargate Pod Execution Role
+# ECS Task Role
+# 컨테이너 내부 앱이 AWS 서비스(S3, Secrets Manager 등)를 호출할 때 사용
 #------------------------------------------------------------------------------
 
-resource "aws_iam_role" "fargate" {
-  name = "${var.cluster_name}-fargate-role"
+resource "aws_iam_role" "ecs_task" {
+  name = "${var.project_name}-ecs-task-role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -48,26 +44,11 @@ resource "aws_iam_role" "fargate" {
       Action = "sts:AssumeRole"
       Effect = "Allow"
       Principal = {
-        Service = "eks-fargate-pods.amazonaws.com"
-      }
-      Condition = {
-        ArnLike = {
-          "aws:SourceArn" = "arn:aws:eks:${var.aws_region}:${data.aws_caller_identity.current.account_id}:fargateprofile/${var.cluster_name}/*"
-        }
+        Service = "ecs-tasks.amazonaws.com"
       }
     }]
   })
 
-  tags = merge(var.tags, { Name = "${var.cluster_name}-fargate-role" })
+  tags = merge(var.tags, { Name = "${var.project_name}-ecs-task-role" })
 }
 
-resource "aws_iam_role_policy_attachment" "fargate_pod_policy" {
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSFargatePodExecutionRolePolicy"
-  role       = aws_iam_role.fargate.name
-}
-
-#------------------------------------------------------------------------------
-# Data Sources
-#------------------------------------------------------------------------------
-
-data "aws_caller_identity" "current" {}
