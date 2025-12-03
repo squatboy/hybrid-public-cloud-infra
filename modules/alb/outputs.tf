@@ -22,14 +22,37 @@ output "zone_id" {
   value       = aws_lb.this.zone_id
 }
 
+# Cloud Target Group Outputs
+output "target_group_cloud_arn" {
+  description = "Cloud (Fargate) target group ARN"
+  value       = aws_lb_target_group.cloud.arn
+}
+
+output "target_group_cloud_name" {
+  description = "Cloud (Fargate) target group name"
+  value       = aws_lb_target_group.cloud.name
+}
+
+# OnPrem Target Group Outputs
+output "target_group_onprem_arn" {
+  description = "OnPrem (ECS Anywhere) target group ARN"
+  value       = aws_lb_target_group.onprem.arn
+}
+
+output "target_group_onprem_name" {
+  description = "OnPrem (ECS Anywhere) target group name"
+  value       = aws_lb_target_group.onprem.name
+}
+
+# Legacy output for backward compatibility
 output "target_group_arn" {
-  description = "Target group ARN"
-  value       = aws_lb_target_group.this.arn
+  description = "Cloud target group ARN (deprecated, use target_group_cloud_arn)"
+  value       = aws_lb_target_group.cloud.arn
 }
 
 output "target_group_name" {
-  description = "Target group name"
-  value       = aws_lb_target_group.this.name
+  description = "Cloud target group name (deprecated, use target_group_cloud_name)"
+  value       = aws_lb_target_group.cloud.name
 }
 
 output "http_listener_arn" {
