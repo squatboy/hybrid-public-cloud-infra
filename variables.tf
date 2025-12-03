@@ -114,14 +114,27 @@ variable "ecs_container_memory" {
   type        = number
 }
 
-variable "ecs_desired_count" {
-  description = "Desired number of ECS tasks"
+variable "ecs_cloud_desired_count" {
+  description = "Desired number of Cloud (Fargate) ECS tasks"
   type        = number
+  default     = 1
+}
+
+variable "ecs_onprem_desired_count" {
+  description = "Desired number of OnPrem (External) ECS tasks. Set to 0 until ECS Anywhere instance is registered."
+  type        = number
+  default     = 0
 }
 
 variable "onprem_vault_ip" {
   description = "On-premise Vault server IP address"
   type        = string
+}
+
+variable "onprem_server_ip" {
+  description = "On-premise application server IP address (vm-app-01) for ALB Target Group"
+  type        = string
+  default     = "10.10.10.20"
 }
 
 #------------------------------------------------------------------------------

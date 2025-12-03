@@ -22,8 +22,8 @@ variable "ecs_sg_id" {
   type        = string
 }
 
-variable "target_group_arn" {
-  description = "ALB target group ARN"
+variable "target_group_cloud_arn" {
+  description = "ALB target group ARN for Cloud (Fargate) service"
   type        = string
 }
 
@@ -60,10 +60,16 @@ variable "container_memory" {
   default     = 512
 }
 
-variable "desired_count" {
-  description = "Desired number of ECS tasks"
+variable "cloud_desired_count" {
+  description = "Desired number of Cloud (Fargate) ECS tasks"
   type        = number
   default     = 1
+}
+
+variable "onprem_desired_count" {
+  description = "Desired number of OnPrem (External) ECS tasks. Set to 0 until ECS Anywhere instance is registered."
+  type        = number
+  default     = 0
 }
 
 variable "onprem_vault_ip" {

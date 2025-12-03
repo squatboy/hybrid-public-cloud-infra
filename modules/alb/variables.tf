@@ -40,6 +40,11 @@ variable "enable_deletion_protection" {
   default     = false
 }
 
+variable "onprem_server_ip" {
+  description = "On-premise server IP address for Target Group attachment"
+  type        = string
+}
+
 variable "tags" {
   description = "Common tags to apply to all resources"
   type        = map(string)

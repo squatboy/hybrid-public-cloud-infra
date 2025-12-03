@@ -137,9 +137,45 @@ output "ecs_cluster_name" {
   value       = module.ecs.cluster_name
 }
 
-output "ecs_service_name" {
-  description = "ECS service name"
-  value       = module.ecs.service_name
+output "ecs_cloud_service_name" {
+  description = "ECS Cloud (Fargate) service name"
+  value       = module.ecs.cloud_service_name
+}
+
+output "ecs_onprem_service_name" {
+  description = "ECS OnPrem (External) service name"
+  value       = module.ecs.onprem_service_name
+}
+
+#------------------------------------------------------------------------------
+# SSM Outputs (ECS Anywhere 등록용)
+#------------------------------------------------------------------------------
+
+output "ssm_activation_id" {
+  description = "SSM Activation ID for ECS Anywhere registration"
+  value       = module.ssm.activation_id
+}
+
+output "ssm_activation_code" {
+  description = "SSM Activation Code for ECS Anywhere registration (SENSITIVE)"
+  value       = module.ssm.activation_code
+  sensitive   = true
+}
+
+output "ecs_anywhere_registration_command" {
+  description = "Command to register on-premise server as ECS Anywhere instance"
+  value       = <<-EOT
+    # vm-app-01에서 실행할 명령어:
+    curl --proto "https" -o "/tmp/ecs-anywhere-install.sh" "https://amazon-ecs-agent.s3.amazonaws.com/ecs-anywhere-install-latest.sh"
+    sudo bash /tmp/ecs-anywhere-install.sh \
+      --cluster ${module.ecs.cluster_name} \
+      --activation-id ${module.ssm.activation_id} \
+      --activation-code <ACTIVATION_CODE> \
+      --region ${var.aws_region}
+    
+    # ACTIVATION_CODE는 다음 명령어로 확인:
+    # terraform output -raw ssm_activation_code
+  EOT
 }
 
 #------------------------------------------------------------------------------
