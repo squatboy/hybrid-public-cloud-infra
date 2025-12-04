@@ -13,8 +13,9 @@ resource "aws_ssm_activation" "ecs_anywhere" {
   iam_role           = var.ssm_role_name
   registration_limit = var.registration_limit
 
-  # 충분히 먼 미래 날짜로 설정하여 만료 방지
-  expiration_date = "2099-12-31T23:59:59Z"
+  # SSM Activation은 최대 30일까지만 유효
+  # 만료 후 새로운 Activation을 생성해야 함
+  expiration_date = timeadd(timestamp(), "720h")  # 30일
 
   tags = merge(var.tags, { Name = "${var.env_name}-ecs-anywhere-activation" })
 
