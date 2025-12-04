@@ -24,7 +24,7 @@ variable "security_group_ids" {
 variable "engine_version" {
   description = "Aurora MySQL engine version"
   type        = string
-  default     = "8.0.mysql_aurora.3.05.2"
+  default     = "8.0.mysql_aurora.3.04.0"
 }
 
 variable "database_name" {
