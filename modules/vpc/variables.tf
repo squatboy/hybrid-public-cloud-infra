@@ -32,3 +32,9 @@ variable "tags" {
   type        = map(string)
   default     = {}
 }
+
+variable "enable_nat_gateway" {
+  description = "Enable NAT Gateway(Set false for test)"
+  type        = bool
+  default     = true
+}

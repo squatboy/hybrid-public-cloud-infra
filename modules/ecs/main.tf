@@ -103,7 +103,7 @@ resource "aws_ecs_service" "cloud" {
   network_configuration {
     subnets          = var.private_subnets
     security_groups  = [var.ecs_sg_id]
-    assign_public_ip = false
+    assign_public_ip = var.enable_nat_gateway ? false : true
   }
 
   load_balancer {

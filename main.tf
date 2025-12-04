@@ -9,12 +9,13 @@
 module "vpc" {
   source = "./modules/vpc"
 
-  env_name        = var.environment
-  vpc_cidr        = var.vpc_cidr
-  public_subnets  = var.public_subnets
-  private_subnets = var.private_subnets
-  azs             = var.availability_zones
-  tags            = local.common_tags
+  env_name           = var.environment
+  vpc_cidr           = var.vpc_cidr
+  public_subnets     = var.public_subnets
+  private_subnets    = var.private_subnets
+  azs                = var.availability_zones
+  enable_nat_gateway = var.enable_nat_gateway
+  tags               = local.common_tags
 }
 
 #------------------------------------------------------------------------------
@@ -128,6 +129,7 @@ module "ecs" {
   cloud_desired_count    = var.ecs_cloud_desired_count
   onprem_desired_count   = var.ecs_onprem_desired_count
   onprem_vault_ip        = var.onprem_vault_ip
+  enable_nat_gateway     = var.enable_nat_gateway
   tags                   = local.common_tags
 
   depends_on = [module.vpc, module.security, module.alb, module.iam, module.ecr]

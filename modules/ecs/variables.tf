@@ -94,3 +94,9 @@ variable "tags" {
   type        = map(string)
   default     = {}
 }
+
+variable "enable_nat_gateway" {
+  description = "Enable NAT Gateway (affects assign_public_ip for ECS tasks)"
+  type        = bool
+  default     = true
+}
