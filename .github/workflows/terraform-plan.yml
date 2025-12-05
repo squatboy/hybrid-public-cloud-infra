@@ -98,72 +98,15 @@ jobs:
     needs: [terraform-validate, tflint-scan, security-scan]
     if: always() && github.event_name == 'pull_request'
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v2
-        with:
-          terraform_version: ${{ env.TF_VERSION }}
-
-      - name: Run Terraform Plan
-        id: plan
-        run: |
-          terraform init -backend=false
-          terraform plan -no-color -out=plan.tfplan 2>&1 | tee plan_output.txt || true
-        env:
-          AWS_REGION: ${{ env.AWS_REGION }}
-        continue-on-error: true
-
-      - name: Format Plan Output
-        id: fmt_plan
-        run: |
-          {
-            echo "## Terraform Plan 검사 결과"
-            echo ""
-            echo "### ✅ Validate & Format Check"
-            if [ "${{ needs.terraform-validate.result }}" = "success" ]; then
-              echo "**Status**: 통과"
-            else
-              echo "**Status**: ⚠️ 경고"
-            fi
-            echo ""
-            echo "### 🔍 TFLint (정적 분석)"
-            if [ "${{ needs.tflint-scan.result }}" = "success" ]; then
-              echo "**Status**: 통과"
-            else
-              echo "**Status**: ⚠️ 경고"
-            fi
-            echo ""
-            echo "### 🔐 Security Scan (Trivy)"
-            if [ "${{ needs.security-scan.result }}" = "success" ]; then
-              echo "**Status**: 통과"
-            else
-              echo "**Status**: ⚠️ 경고"
-            fi
-            echo ""
-            echo "### 📋 Terraform Plan Output"
-            echo "\`\`\`terraform"
-            head -100 plan_output.txt
-            echo "\`\`\`"
-            echo ""
-            echo "---"
-            echo "**Note**: 모든 검사가 완료되었습니다. PR을 승인하실 수 있습니다."
-          } >> $GITHUB_STEP_SUMMARY
-
       - name: Comment PR
-        if: github.event_name == 'pull_request'
         uses: actions/github-script@v6
         with:
           script: |
-            const fs = require('fs');
-            const planOutput = fs.readFileSync('plan_output.txt', 'utf8').substring(0, 2000);
-            
             const validateStatus = '${{ needs.terraform-validate.result }}' === 'success' ? '✅' : '⚠️';
             const tflintStatus = '${{ needs.tflint-scan.result }}' === 'success' ? '✅' : '⚠️';
             const securityStatus = '${{ needs.security-scan.result }}' === 'success' ? '✅' : '⚠️';
             
-            const comment = `## 🚀 Terraform Plan 검사 결과
+            const comment = `## Terraform 검사 결과
             
             | 검사 항목 | 상태 |
             |---------|------|
@@ -171,12 +114,9 @@ jobs:
             | TFLint (정적 분석) | ${tflintStatus} |
             | Security Scan (Trivy) | ${securityStatus} |
             
-            ### 📋 Plan 요약
-            \`\`\`terraform
-            ${planOutput}...
-            \`\`\`
+            > **Note**: \`terraform plan\`은 민감정보가 필요하여 로컬에서 실행해주세요.
             
-            모든 검사가 완료되었습니다. ✨`;
+            모든 검사가 완료되었습니다.`;
             
             github.rest.issues.createComment({
               issue_number: context.issue.number,
