@@ -164,17 +164,15 @@ output "ssm_activation_code" {
 
 output "ecs_anywhere_registration_command" {
   description = "Command to register on-premise server as ECS Anywhere instance"
+  sensitive   = true
   value       = <<-EOT
     # vm-app-01에서 실행할 명령어:
     curl --proto "https" -o "/tmp/ecs-anywhere-install.sh" "https://amazon-ecs-agent.s3.amazonaws.com/ecs-anywhere-install-latest.sh"
     sudo bash /tmp/ecs-anywhere-install.sh \
       --cluster ${module.ecs.cluster_name} \
       --activation-id ${module.ssm.activation_id} \
-      --activation-code <ACTIVATION_CODE> \
+      --activation-code ${module.ssm.activation_code} \
       --region ${var.aws_region}
-    
-    # ACTIVATION_CODE는 다음 명령어로 확인:
-    # terraform output -raw ssm_activation_code
   EOT
 }
 
