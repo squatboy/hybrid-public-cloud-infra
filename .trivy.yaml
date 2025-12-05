@@ -1,0 +1,41 @@
+# Trivy Configuration
+# https://aquasecurity.github.io/trivy/latest/
+
+severity:
+  - MEDIUM
+  - HIGH
+  - CRITICAL
+
+exit-code: 0
+
+quiet: false
+
+format: sarif
+
+# 스캔할 취약점 타입
+vuln-type:
+  - os
+  - library
+
+# 검사할 파일 타입
+scanners:
+  - config
+  - secret
+  - license
+
+# 무시할 규칙 (필요시 추가)
+skip-dirs:
+  - .git
+  - .terraform
+  - node_modules
+
+# Terraform 특정 검사
+severity-override:
+  CRITICAL: true
+  HIGH: true
+  MEDIUM: true
+
+# 라이선스 검사
+license:
+  confidence: 0.8
+  hidden: true
