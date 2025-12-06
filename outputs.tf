@@ -218,3 +218,11 @@ output "rds_cluster_port" {
   value       = module.rds.cluster_port
 }
 
+#------------------------------------------------------------------------------
+# GitHub Actions OIDC Outputs
+#------------------------------------------------------------------------------
+
+output "github_actions_role_arn" {
+  description = "ARN of the IAM Role for GitHub Actions OIDC"
+  value       = module.iam.github_actions_role_arn
+}
