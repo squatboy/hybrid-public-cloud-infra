@@ -35,3 +35,12 @@ output "ssm_role_name" {
   description = "Name of the SSM managed instance IAM role"
   value       = aws_iam_role.ssm_managed_instance.name
 }
+
+#------------------------------------------------------------------------------
+# GitHub Actions OIDC Role Outputs
+#------------------------------------------------------------------------------
+
+output "github_actions_role_arn" {
+  description = "ARN of the IAM Role for GitHub Actions OIDC"
+  value       = aws_iam_role.github_actions.arn
+}
