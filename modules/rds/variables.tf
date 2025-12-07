@@ -22,9 +22,9 @@ variable "security_group_ids" {
 #------------------------------------------------------------------------------
 
 variable "engine_version" {
-  description = "Aurora MySQL engine version"
+  description = "Aurora MySQL engine version (3.08.0+ required for 0 ACU support)"
   type        = string
-  default     = "8.0.mysql_aurora.3.04.0"
+  default     = "8.0.mysql_aurora.3.08.0"
 }
 
 variable "database_name" {
@@ -50,15 +50,21 @@ variable "master_password" {
 #------------------------------------------------------------------------------
 
 variable "min_capacity" {
-  description = "Minimum ACU capacity for Serverless v2"
+  description = "Minimum ACU capacity for Serverless v2 (0 enables auto-pause)"
   type        = number
-  default     = 0.5
+  default     = 0
 }
 
 variable "max_capacity" {
   description = "Maximum ACU capacity for Serverless v2"
   type        = number
   default     = 1.0
+}
+
+variable "seconds_until_auto_pause" {
+  description = "Seconds of inactivity before auto-pause (300-86400, only applies when min_capacity=0)"
+  type        = number
+  default     = 300 # 5 minutes
 }
 
 variable "instance_count" {
