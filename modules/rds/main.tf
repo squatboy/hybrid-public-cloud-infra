@@ -33,10 +33,11 @@ resource "aws_rds_cluster" "this" {
   db_subnet_group_name   = aws_db_subnet_group.this.name
   vpc_security_group_ids = var.security_group_ids
 
-  # Serverless v2 Scaling Configuration
+  # Serverless v2 Scaling Configuration (0 ACU auto-pause enabled)
   serverlessv2_scaling_configuration {
-    min_capacity = var.min_capacity
-    max_capacity = var.max_capacity
+    min_capacity             = var.min_capacity
+    max_capacity             = var.max_capacity
+    seconds_until_auto_pause = var.min_capacity == 0 ? var.seconds_until_auto_pause : null
   }
 
   # Backup and Maintenance
