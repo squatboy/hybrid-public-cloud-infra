@@ -23,7 +23,12 @@ variable "onprem_cidr" {
 }
 
 variable "route_table_id" {
-  description = "Route table ID for VPN route propagation"
+  description = "Route table ID for VPN route propagation (Private Route Table)"
+  type        = string
+}
+
+variable "public_route_table_id" {
+  description = "Public Route Table ID for VPN route propagation"
   type        = string
 }
 

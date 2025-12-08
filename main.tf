@@ -24,13 +24,14 @@ module "vpc" {
 module "vpn" {
   source = "./modules/vpn"
 
-  env_name         = var.environment
-  vpc_id           = module.vpc.vpc_id
-  onprem_public_ip = var.onprem_public_ip
-  onprem_cidr      = var.onprem_cidr
-  route_table_id   = module.vpc.private_route_table_id
-  bgp_asn          = var.bgp_asn
-  tags             = local.common_tags
+  env_name              = var.environment
+  vpc_id                = module.vpc.vpc_id
+  onprem_public_ip      = var.onprem_public_ip
+  onprem_cidr           = var.onprem_cidr
+  route_table_id        = module.vpc.private_route_table_id
+  public_route_table_id = module.vpc.public_route_table_id
+  bgp_asn               = var.bgp_asn
+  tags                  = local.common_tags
 
   depends_on = [module.vpc]
 }

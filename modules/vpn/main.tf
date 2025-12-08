@@ -35,8 +35,14 @@ resource "aws_vpn_connection_route" "onprem" {
   vpn_connection_id      = aws_vpn_connection.this.id
 }
 
-# Route Propagation (Private Subnet이 VPN 경로를 알게 함)
-resource "aws_vpn_gateway_route_propagation" "this" {
+# Route Propagation - Private Route Table (Private Subnet이 VPN 경로를 알게 함)
+resource "aws_vpn_gateway_route_propagation" "private" {
   vpn_gateway_id = aws_vpn_gateway.this.id
   route_table_id = var.route_table_id
+}
+
+# Route Propagation - Public Route Table (ALB도 온프레미스로 트래픽 라우팅 가능)
+resource "aws_vpn_gateway_route_propagation" "public" {
+  vpn_gateway_id = aws_vpn_gateway.this.id
+  route_table_id = var.public_route_table_id
 }
