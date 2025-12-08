@@ -119,7 +119,7 @@ resource "aws_ecs_service" "cloud" {
   tags = merge(var.tags, { Name = "${var.env_name}-cloud-service" })
 
   lifecycle {
-    ignore_changes = [desired_count]
+    ignore_changes = [desired_count, task_definition]
   }
 }
 
@@ -201,6 +201,6 @@ resource "aws_ecs_service" "onprem" {
   tags = merge(var.tags, { Name = "${var.env_name}-onprem-service" })
 
   lifecycle {
-    ignore_changes = [desired_count]
+    ignore_changes = [desired_count, task_definition]
   }
 }
