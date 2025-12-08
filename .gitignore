@@ -52,4 +52,7 @@ Thumbs.db
 *.bak
 *.backup
 
+# Output files (sensitive information)
+outputs.json
+
 plan.md
