@@ -8,12 +8,12 @@ variable "env_name" {
 }
 
 variable "private_subnet_ids" {
-  description = "List of private subnet IDs for Aurora"
+  description = "List of private subnet IDs for RDS"
   type        = list(string)
 }
 
 variable "security_group_ids" {
-  description = "List of security group IDs for Aurora"
+  description = "List of security group IDs for RDS"
   type        = list(string)
 }
 
@@ -22,9 +22,27 @@ variable "security_group_ids" {
 #------------------------------------------------------------------------------
 
 variable "engine_version" {
-  description = "Aurora MySQL engine version (3.08.0+ required for 0 ACU support)"
+  description = "MySQL engine version"
   type        = string
-  default     = "8.0.mysql_aurora.3.08.0"
+  default     = "8.0"
+}
+
+variable "instance_class" {
+  description = "RDS instance class (db.t3.micro for Free Tier)"
+  type        = string
+  default     = "db.t3.micro"
+}
+
+variable "allocated_storage" {
+  description = "Allocated storage in GB (Free Tier: 20GB)"
+  type        = number
+  default     = 20
+}
+
+variable "max_allocated_storage" {
+  description = "Maximum allocated storage in GB for autoscaling"
+  type        = number
+  default     = 20
 }
 
 variable "database_name" {
@@ -46,41 +64,13 @@ variable "master_password" {
 }
 
 #------------------------------------------------------------------------------
-# Serverless v2 Scaling
-#------------------------------------------------------------------------------
-
-variable "min_capacity" {
-  description = "Minimum ACU capacity for Serverless v2 (0 enables auto-pause)"
-  type        = number
-  default     = 0
-}
-
-variable "max_capacity" {
-  description = "Maximum ACU capacity for Serverless v2"
-  type        = number
-  default     = 1.0
-}
-
-variable "seconds_until_auto_pause" {
-  description = "Seconds of inactivity before auto-pause (300-86400, only applies when min_capacity=0)"
-  type        = number
-  default     = 300 # 5 minutes
-}
-
-variable "instance_count" {
-  description = "Number of Aurora instances"
-  type        = number
-  default     = 1
-}
-
-#------------------------------------------------------------------------------
 # Backup and Protection
 #------------------------------------------------------------------------------
 
 variable "backup_retention_period" {
-  description = "Number of days to retain backups"
+  description = "Number of days to retain backups (Free Tier: max 1 day)"
   type        = number
-  default     = 7
+  default     = 1
 }
 
 variable "preferred_backup_window" {

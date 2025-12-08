@@ -74,7 +74,7 @@ module "ecr" {
 }
 
 #------------------------------------------------------------------------------
-# RDS Module (Aurora Serverless v2)
+# RDS Module (MySQL Free Tier)
 #------------------------------------------------------------------------------
 module "rds" {
   source = "./modules/rds"
@@ -84,8 +84,6 @@ module "rds" {
   security_group_ids  = [module.security.private_default_sg_id]
   master_password     = var.db_master_password
   database_name       = var.db_name
-  min_capacity        = var.db_min_capacity
-  max_capacity        = var.db_max_capacity
   deletion_protection = var.environment == "prod" ? true : false
   skip_final_snapshot = var.environment == "prod" ? false : true
   tags                = local.common_tags

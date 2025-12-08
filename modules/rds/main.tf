@@ -1,6 +1,6 @@
 #------------------------------------------------------------------------------
 # RDS Module - Main Configuration
-# Aurora Serverless v2 (MySQL)
+# RDS MySQL (Free Tier: db.t3.micro - 750 hours/month)
 #------------------------------------------------------------------------------
 
 #------------------------------------------------------------------------------
@@ -8,64 +8,56 @@
 #------------------------------------------------------------------------------
 
 resource "aws_db_subnet_group" "this" {
-  name        = "${var.env_name}-aurora-subnet-group"
-  description = "Subnet group for Aurora Serverless v2"
+  name        = "${var.env_name}-rds-subnet-group"
+  description = "Subnet group for RDS MySQL"
   subnet_ids  = var.private_subnet_ids
 
-  tags = merge(var.tags, { Name = "${var.env_name}-aurora-subnet-group" })
+  tags = merge(var.tags, { Name = "${var.env_name}-rds-subnet-group" })
 }
 
 #------------------------------------------------------------------------------
-# Aurora Cluster
+# RDS MySQL Instance (Free Tier)
 #------------------------------------------------------------------------------
 
-resource "aws_rds_cluster" "this" {
-  cluster_identifier = "${var.env_name}-aurora-cluster"
+resource "aws_db_instance" "this" {
+  identifier = "${var.env_name}-mysql"
 
-  engine         = "aurora-mysql"
-  engine_mode    = "provisioned"
+  engine         = "mysql"
   engine_version = var.engine_version
+  instance_class = var.instance_class
 
-  database_name   = var.database_name
-  master_username = var.master_username
-  master_password = var.master_password
+  allocated_storage     = var.allocated_storage
+  max_allocated_storage = var.max_allocated_storage
+  storage_type          = "gp2"
+
+  db_name  = var.database_name
+  username = var.master_username
+  password = var.master_password
 
   db_subnet_group_name   = aws_db_subnet_group.this.name
   vpc_security_group_ids = var.security_group_ids
 
-  # Serverless v2 Scaling Configuration (0 ACU auto-pause enabled)
-  serverlessv2_scaling_configuration {
-    min_capacity             = var.min_capacity
-    max_capacity             = var.max_capacity
-    seconds_until_auto_pause = var.min_capacity == 0 ? var.seconds_until_auto_pause : null
-  }
+  # Multi-AZ (disabled for Free Tier)
+  multi_az = false
 
-  # Backup and Maintenance
+  # Backup
   backup_retention_period = var.backup_retention_period
-  preferred_backup_window = var.preferred_backup_window
-  skip_final_snapshot     = var.skip_final_snapshot
-  deletion_protection     = var.deletion_protection
+  backup_window           = var.preferred_backup_window
+  maintenance_window      = "Mon:04:00-Mon:05:00"
 
-  # Encryption
+  # Protection
+  skip_final_snapshot       = var.skip_final_snapshot
+  final_snapshot_identifier = var.skip_final_snapshot ? null : "${var.env_name}-mysql-final-snapshot"
+  deletion_protection       = var.deletion_protection
+
+  # Encryption (Free Tier compatible)
   storage_encrypted = true
 
-  tags = merge(var.tags, { Name = "${var.env_name}-aurora-cluster" })
-}
+  # Performance Insights (disabled for Free Tier)
+  performance_insights_enabled = false
 
-#------------------------------------------------------------------------------
-# Aurora Instance (Serverless v2)
-#------------------------------------------------------------------------------
+  # Public accessibility
+  publicly_accessible = false
 
-resource "aws_rds_cluster_instance" "this" {
-  count = var.instance_count
-
-  identifier         = "${var.env_name}-aurora-instance-${count.index + 1}"
-  cluster_identifier = aws_rds_cluster.this.id
-  instance_class     = "db.serverless"
-  engine             = aws_rds_cluster.this.engine
-  engine_version     = aws_rds_cluster.this.engine_version
-
-  db_subnet_group_name = aws_db_subnet_group.this.name
-
-  tags = merge(var.tags, { Name = "${var.env_name}-aurora-instance-${count.index + 1}" })
+  tags = merge(var.tags, { Name = "${var.env_name}-mysql" })
 }

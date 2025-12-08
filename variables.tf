@@ -157,11 +157,11 @@ variable "ecr_repository_names" {
 }
 
 #------------------------------------------------------------------------------
-# RDS Settings (Aurora Serverless v2)
+# RDS Settings (MySQL Free Tier)
 #------------------------------------------------------------------------------
 
 variable "db_master_password" {
-  description = "Master password for Aurora database"
+  description = "Master password for RDS MySQL"
   type        = string
   sensitive   = true
 }
@@ -169,16 +169,6 @@ variable "db_master_password" {
 variable "db_name" {
   description = "Name of the default database"
   type        = string
-}
-
-variable "db_min_capacity" {
-  description = "Minimum ACU for Aurora Serverless v2"
-  type        = number
-}
-
-variable "db_max_capacity" {
-  description = "Maximum ACU for Aurora Serverless v2"
-  type        = number
 }
 
 #------------------------------------------------------------------------------
