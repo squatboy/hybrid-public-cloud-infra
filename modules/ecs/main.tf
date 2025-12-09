@@ -154,7 +154,9 @@ resource "aws_ecs_task_definition" "onprem" {
         { name = "NODE_ENV", value = "production" },
         { name = "IS_ONPREM", value = "true" },
         { name = "VAULT_ADDR", value = "http://${var.onprem_vault_ip}:8200" },
-        { name = "PORT", value = tostring(var.container_port) }
+        { name = "PORT", value = tostring(var.container_port) },
+        { name = "VAULT_ROLE_ID", value = var.vault_role_id },
+        { name = "VAULT_SECRET_ID", value = var.vault_secret_id }
       ]
 
       logConfiguration = {

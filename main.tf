@@ -131,6 +131,8 @@ module "ecs" {
   cloud_desired_count    = var.ecs_cloud_desired_count
   onprem_desired_count   = var.ecs_onprem_desired_count
   onprem_vault_ip        = var.onprem_vault_ip
+  vault_role_id          = var.vault_role_id
+  vault_secret_id        = var.vault_secret_id
   enable_nat_gateway     = var.enable_nat_gateway
   tags                   = local.common_tags
 
