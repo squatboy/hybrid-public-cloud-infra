@@ -1,0 +1,64 @@
+# Cost Optimization Settings
+
+# Enable NAT Gateway (set to false for testing to reduce costs)
+# true  = Production mode (NAT Gateway enabled, ECS uses private IP)
+# false = Test mode (NAT Gateway disabled, ECS uses public IP)
+enable_nat_gateway = true
+
+# General Settings
+
+aws_region   = "ap-northeast-2"
+environment  = "staging"
+project_name = "pii-hybrid"
+
+# Network Settings
+
+vpc_cidr = "10.20.0.0/16"
+
+# Multi-AZ configuration
+availability_zones = ["ap-northeast-2a", "ap-northeast-2c"]
+public_subnets     = ["10.20.1.0/24", "10.20.2.0/24"]
+private_subnets    = ["10.20.10.0/24", "10.20.11.0/24"]
+
+# VPN Settings (On-Premise Connection)
+
+onprem_public_ip = "YOUR_ONPREM_PUBLIC_IP"  # On-premise NAT Gateway public IP
+onprem_cidr      = "YOUR_ONPREM_CIDR"       # On-premise internal network
+bgp_asn          = 65000                    # Private ASN (not used with static routing)
+
+# Additional Tags
+
+additional_tags = {
+  Owner      = "infra-team"
+  CostCenter = "hybrid-project"
+}
+
+# ECS Settings
+
+ecs_container_port       = 8000
+ecs_container_cpu        = 256   # 0.25 vCPU
+ecs_container_memory     = 512   # 512 MB
+ecs_cloud_desired_count  = 1     # Number of Fargate service instances
+ecs_onprem_desired_count = 0     # Keep at 0 until ECS Anywhere registration
+onprem_vault_ip          = "YOUR_ONPREM_VAULT_IP"   # On-premise Vault IP
+onprem_server_ip        = "YOUR_ONPREM_SERVER_IP"  # On-premise App Server IP
+
+# ECR Settings
+
+ecr_repository_names = ["pii-system/pii-api"]
+
+# RDS Settings (Aurora Serverless v2)
+
+db_master_password = "YOUR_DB_PASSWORD"  # Change in production
+db_name            = "app_db"
+db_min_capacity    = 0    # 0 ACU: Auto-pause enabled (Aurora MySQL 3.08.0+)
+db_max_capacity    = 1.0
+
+# CI/CD Settings (GitHub OIDC)
+
+github_repo = "your-github-org/your-repo-name"
+
+# Vault Settings
+
+vault_role_id   = "YOUR_VAULT_ROLE_ID"
+vault_secret_id = "YOUR_VAULT_SECRET_ID"
