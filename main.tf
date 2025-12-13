@@ -142,6 +142,8 @@ module "ecs" {
   container_cpu          = var.ecs_container_cpu
   container_memory       = var.ecs_container_memory
   cloud_desired_count    = var.ecs_cloud_desired_count
+  ecs_cloud_max_count    = var.ecs_cloud_max_count
+  ecs_cloud_target_cpu   = var.ecs_cloud_target_cpu
   onprem_desired_count   = var.ecs_onprem_desired_count
   onprem_vault_ip        = var.onprem_vault_ip
   vault_role_id          = var.vault_role_id
