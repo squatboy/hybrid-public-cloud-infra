@@ -86,3 +86,34 @@ resource "aws_iam_role_policy_attachment" "ecs_anywhere_policy" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceforEC2Role"
 }
 
+#------------------------------------------------------------------------------
+# Secrets Manager Access Policy
+# ECS Task가 DB 비밀번호를 읽기 위해 필요
+#------------------------------------------------------------------------------
+
+resource "aws_iam_policy" "secrets_read" {
+  name        = "${var.project_name}-secrets-read-policy"
+  description = "Allow reading secrets from Secrets Manager"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "secretsmanager:GetSecretValue",
+          "secretsmanager:DescribeSecret"
+        ]
+        # 모든 시크릿이 아닌, 프로젝트 관련 시크릿만 허용 (최소 권한 원칙)
+        Resource = "arn:aws:secretsmanager:*:*:secret:/${var.project_name}/*"
+      }
+    ]
+  })
+
+  tags = merge(var.tags, { Name = "${var.project_name}-secrets-read-policy" })
+}
+
+resource "aws_iam_role_policy_attachment" "ecs_task_secrets" {
+  role       = aws_iam_role.ecs_task.name
+  policy_arn = aws_iam_policy.secrets_read.arn
+}

@@ -172,12 +172,6 @@ variable "ecr_repository_names" {
 # RDS Settings (Aurora Serverless v2)
 #------------------------------------------------------------------------------
 
-variable "db_master_password" {
-  description = "Master password for Aurora database"
-  type        = string
-  sensitive   = true
-}
-
 variable "db_name" {
   description = "Name of the default database"
   type        = string

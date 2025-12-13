@@ -124,3 +124,8 @@ variable "vault_secret_id" {
   type        = string
   sensitive   = true
 }
+
+variable "db_secret_arn" {
+  description = "ARN of the Secrets Manager secret for DB credentials"
+  type        = string
+}

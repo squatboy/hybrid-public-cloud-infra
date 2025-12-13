@@ -51,7 +51,6 @@ ecr_repository_names = ["pii-system/pii-api"]
 
 # RDS Settings (Aurora Serverless v2)
 
-db_master_password = "YOUR_DB_PASSWORD"  # Change in production
 db_name            = "app_db"
 db_min_capacity    = 0    # 0 ACU: Auto-pause enabled (Aurora MySQL 3.08.0+)
 db_max_capacity    = 1.0
