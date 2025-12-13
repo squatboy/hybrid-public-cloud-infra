@@ -4,6 +4,16 @@
 #------------------------------------------------------------------------------
 
 #------------------------------------------------------------------------------
+# Generate Random DB Master Password
+#------------------------------------------------------------------------------
+
+resource "random_password" "db_master" {
+  length           = 16
+  special          = true
+  override_special = "!#$%&*()-_=+[]{}<>:?"
+}
+
+#------------------------------------------------------------------------------
 # VPC Module
 #------------------------------------------------------------------------------
 module "vpc" {
@@ -83,7 +93,7 @@ module "rds" {
   env_name            = var.environment
   private_subnet_ids  = module.vpc.private_subnet_ids
   security_group_ids  = [module.security.private_default_sg_id]
-  master_password     = var.db_master_password
+  master_password     = random_password.db_master.result
   database_name       = var.db_name
   min_capacity        = var.db_min_capacity
   max_capacity        = var.db_max_capacity
@@ -92,6 +102,24 @@ module "rds" {
   tags                = local.common_tags
 
   depends_on = [module.vpc, module.security]
+}
+
+#------------------------------------------------------------------------------
+# Secrets Manager Module
+#------------------------------------------------------------------------------
+module "secret_manager" {
+  source = "./modules/secret_manager"
+
+  env_name        = var.environment
+  project_name    = var.project_name
+  db_password     = random_password.db_master.result
+  db_host         = module.rds.cluster_endpoint
+  db_port         = tostring(module.rds.cluster_port)
+  db_name         = module.rds.database_name
+  master_username = module.rds.master_username
+  tags            = local.common_tags
+
+  depends_on = [module.rds]
 }
 
 #------------------------------------------------------------------------------
@@ -149,9 +177,10 @@ module "ecs" {
   vault_role_id          = var.vault_role_id
   vault_secret_id        = var.vault_secret_id
   enable_nat_gateway     = var.enable_nat_gateway
+  db_secret_arn          = module.secret_manager.secret_arn
   tags                   = local.common_tags
 
-  depends_on = [module.vpc, module.security, module.alb, module.iam, module.ecr]
+  depends_on = [module.vpc, module.security, module.alb, module.iam, module.ecr, module.secret_manager]
 }
 
 #------------------------------------------------------------------------------
