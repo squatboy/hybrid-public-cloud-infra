@@ -64,7 +64,8 @@ resource "aws_ecs_task_definition" "cloud" {
       environment = [
         { name = "NODE_ENV", value = "production" },
         { name = "IS_ONPREM", value = "false" },
-        { name = "PORT", value = tostring(var.container_port) }
+        { name = "PORT", value = tostring(var.container_port) },
+        { name = "DB_SECRET_ARN", value = var.db_secret_arn }
       ]
 
       logConfiguration = {
@@ -197,7 +198,7 @@ resource "aws_ecs_service" "onprem" {
   # load_balancer 블록 제거 - ALB Target Group Attachment로 정적 IP 등록
 
   deployment_maximum_percent         = 200
-  deployment_minimum_healthy_percent = 0  # EXTERNAL은 0으로 설정 권장
+  deployment_minimum_healthy_percent = 0 # EXTERNAL은 0으로 설정 권장
   force_new_deployment               = true
 
   tags = merge(var.tags, { Name = "${var.env_name}-onprem-service" })
