@@ -36,12 +36,14 @@ additional_tags = {
 # ECS Settings
 
 ecs_container_port       = 8000
-ecs_container_cpu        = 256   # 0.25 vCPU
-ecs_container_memory     = 512   # 512 MB
-ecs_cloud_desired_count  = 1     # Number of Fargate service instances
-ecs_onprem_desired_count = 0     # Keep at 0 until ECS Anywhere registration
+ecs_container_cpu        = 256           # 0.25 vCPU
+ecs_container_memory     = 512           # 512 MB
+ecs_cloud_desired_count  = 2             # Fargate service initial instance count (minimum)
+ecs_cloud_max_count      = 10            # Auto Scaling maximum instance count
+ecs_cloud_target_cpu     = 70            # Auto Scaling target CPU utilization (%)
+ecs_onprem_desired_count = 0             # Keep at 0 until ECS Anywhere registration
 onprem_vault_ip          = "YOUR_ONPREM_VAULT_IP"   # On-premise Vault IP
-onprem_server_ip        = "YOUR_ONPREM_SERVER_IP"  # On-premise App Server IP
+onprem_server_ip         = "YOUR_ONPREM_SERVER_IP"  # On-premise App Server IP
 
 # ECR Settings
 

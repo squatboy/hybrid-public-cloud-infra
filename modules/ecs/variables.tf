@@ -63,7 +63,7 @@ variable "container_memory" {
 variable "cloud_desired_count" {
   description = "Desired number of Cloud (Fargate) ECS tasks"
   type        = number
-  default     = 1
+  default     = 2
 }
 
 variable "onprem_desired_count" {
@@ -99,6 +99,18 @@ variable "enable_nat_gateway" {
   description = "Enable NAT Gateway (affects assign_public_ip for ECS tasks)"
   type        = bool
   default     = true
+}
+
+variable "ecs_cloud_max_count" {
+  description = "Maximum number of Cloud (Fargate) ECS tasks for Auto Scaling"
+  type        = number
+  default     = 10
+}
+
+variable "ecs_cloud_target_cpu" {
+  description = "Target CPU utilization for Cloud ECS Auto Scaling (%)"
+  type        = number
+  default     = 70
 }
 
 variable "vault_role_id" {

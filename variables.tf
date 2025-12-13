@@ -127,13 +127,25 @@ variable "ecs_container_memory" {
 variable "ecs_cloud_desired_count" {
   description = "Desired number of Cloud (Fargate) ECS tasks"
   type        = number
-  default     = 1
+  default     = 2
 }
 
 variable "ecs_onprem_desired_count" {
   description = "Desired number of OnPrem (External) ECS tasks. Set to 0 until ECS Anywhere instance is registered."
   type        = number
   default     = 0
+}
+
+variable "ecs_cloud_max_count" {
+  description = "Maximum number of Cloud (Fargate) ECS tasks for Auto Scaling"
+  type        = number
+  default     = 10
+}
+
+variable "ecs_cloud_target_cpu" {
+  description = "Target CPU utilization for Cloud ECS Auto Scaling (%)"
+  type        = number
+  default     = 70
 }
 
 variable "onprem_vault_ip" {

@@ -96,3 +96,34 @@ output "log_group_name" {
   description = "Cloud log group name (deprecated, use cloud_log_group_name)"
   value       = aws_cloudwatch_log_group.cloud.name
 }
+
+# Auto Scaling Outputs
+output "autoscaling_target_id" {
+  description = "Auto Scaling target resource ID for Cloud service"
+  value       = aws_appautoscaling_target.cloud_target.id
+}
+
+output "autoscaling_target_arn" {
+  description = "Auto Scaling target ARN for Cloud service"
+  value       = aws_appautoscaling_target.cloud_target.arn
+}
+
+output "autoscaling_policy_arn" {
+  description = "Auto Scaling policy ARN for CPU tracking"
+  value       = aws_appautoscaling_policy.cloud_cpu_scaling.arn
+}
+
+output "autoscaling_policy_name" {
+  description = "Auto Scaling policy name for CPU tracking"
+  value       = aws_appautoscaling_policy.cloud_cpu_scaling.name
+}
+
+output "autoscaling_target_min_capacity" {
+  description = "Minimum capacity for Auto Scaling target"
+  value       = aws_appautoscaling_target.cloud_target.min_capacity
+}
+
+output "autoscaling_target_max_capacity" {
+  description = "Maximum capacity for Auto Scaling target"
+  value       = aws_appautoscaling_target.cloud_target.max_capacity
+}
