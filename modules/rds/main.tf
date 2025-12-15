@@ -29,6 +29,7 @@ resource "aws_rds_cluster" "this" {
   database_name   = var.database_name
   master_username = var.master_username
   master_password = var.master_password
+  apply_immediately   = true
 
   db_subnet_group_name   = aws_db_subnet_group.this.name
   vpc_security_group_ids = var.security_group_ids
