@@ -65,7 +65,9 @@ resource "aws_ecs_task_definition" "cloud" {
         { name = "NODE_ENV", value = "production" },
         { name = "IS_ONPREM", value = "false" },
         { name = "PORT", value = tostring(var.container_port) },
-        { name = "DB_SECRET_ARN", value = var.db_secret_arn }
+        { name = "DB_SECRET_ARN", value = var.db_secret_arn },
+        { name = "DB_POOL_SIZE", value = "20" },
+        { name = "DB_MAX_OVERFLOW", value = "30" }
       ]
 
       logConfiguration = {
