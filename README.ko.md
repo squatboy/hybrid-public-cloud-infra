@@ -4,6 +4,9 @@
 
 또한 AWS ECS Fargate와 ECS Anywhere를 활용하여 단일 Control Plane에서 클라우드와 온프레미스 컨테이너 리소스를 통합적으로 운영·관리하는 아키텍처를 구현합니다.
 
+## Architecture
+<img width="1492" height="924" alt="pii-arch" src="https://github.com/user-attachments/assets/5b33c9af-49be-4e37-9ed2-096a9e146e48" />
+
 ## Architecture Overview
 
 이 프로젝트는 \*\*단일 이미지 전략(Single Image Strategy)\*\*을 채택하여, 트래픽의 경로에 따라 로직이 분기되는 하이브리드 아키텍처를 구성합니다.

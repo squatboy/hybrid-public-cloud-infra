@@ -6,6 +6,9 @@ This project is a codebase defined with Terraform(IaC) for a **hybrid cloud infr
 
 Additionally, it implements an architecture that integrates the operation and management of cloud and on-premise container resources under a single Control Plane by utilizing **AWS ECS Fargate and ECS Anywhere**.
 
+## Architecture
+<img width="1492" height="924" alt="pii-arch" src="https://github.com/user-attachments/assets/5b33c9af-49be-4e37-9ed2-096a9e146e48" />
+
 ## Architecture Overview
 
 This project adopts a **Single Image Strategy** to configure a hybrid architecture where logic branches based on traffic paths.
